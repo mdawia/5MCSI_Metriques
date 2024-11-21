@@ -12,9 +12,7 @@ def hello_world():
     return render_template('hello.html') #Commentaire
 
 
-@app.route("/contact/")
-def contact():
-    return render_template("contact.html")
+
 
 
 from flask import Flask, render_template_string, render_template, jsonify
@@ -66,7 +64,9 @@ def histogramme():
     # Rendre la page HTML avec les données
     return render_template('histogramme.html', results=results)
 
-
+@app.route("/contact/")
+def contact():
+    return render_template("contact.html")
 
 
 
