@@ -67,6 +67,11 @@ def histogramme():
     # Rendre la page HTML avec les données
     return render_template('histogramme.html', results=results)
 
+@app.route("/contact/")
+def contact():
+    return render_template("contact.html")
+
+
 
 
   
