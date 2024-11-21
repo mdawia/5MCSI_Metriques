@@ -52,6 +52,22 @@ def meteo():
 def mongraphique():
     return render_template("graphique.html")
 
+@app.route('/histogramme/')
+def histogramme():
+    # Récupérer les données de l'API
+    response = urlopen('https://samples.openweathermap.org/data/2.5/forecast?lat=0&lon=0&appid=xxx')
+    raw_content = response.read()
+    json_content = json.loads(raw_content.decode('utf-8'))
+    results = []
+    for list_element in json_content.get('list', []):
+        dt_value = datetime.utcfromtimestamp(list_element.get('dt')).strftime('%Y-%m-%d %H:%M:%S')  # Format de la date
+        temp_day_value = list_element.get('main', {}).get('temp') - 273.15  # Kelvin à °C
+        results.append({'Jour': dt_value, 'temp': round(temp_day_value, 2)})
+
+    # Rendre la page HTML avec les données
+    return render_template('histogramme.html', results=results)
+
+
 
   
 if __name__ == "__main__":
