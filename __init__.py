@@ -4,21 +4,17 @@ import matplotlib.pyplot as plt
 import io
 import base64
 from datetime import datetime
-from urllib.request import urlopen
-import sqlite3
+import json
 
-# Une seule initialisation de l'application Flask
 app = Flask(__name__)
 
-# Route pour la page d'accueil
 @app.route('/')
 def hello_world():
-    return render_template('hello.html')  # Vous avez déjà cette route
+    return render_template('hello.html')  # Page d'accueil
 
 # Route pour afficher les commits
 @app.route('/commits/')
 def commits():
-    # Récupérer les commits via l'API GitHub
     url = 'https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits'
     response = requests.get(url)
     commits_data = response.json()
@@ -58,9 +54,10 @@ def commits():
 # Route pour afficher les données météo (exemple)
 @app.route('/tawarano/')
 def meteo():
-    response = urlopen('https://samples.openweathermap.org/data/2.5/forecast?lat=0&lon=0&appid=xxx')
-    raw_content = response.read()
-    json_content = json.loads(raw_content.decode('utf-8'))
+    url = 'https://samples.openweathermap.org/data/2.5/forecast?lat=0&lon=0&appid=xxx'
+    response = requests.get(url)
+    json_content = response.json()
+
     results = []
     for list_element in json_content.get('list', []):
         dt_value = list_element.get('dt')  # Timestamp brut
@@ -69,6 +66,7 @@ def meteo():
             'Jour': datetime.utcfromtimestamp(dt_value).strftime('%Y-%m-%d %H:%M:%S'),  # Conversion Timestamp
             'temp': round(temp_day_value, 2)  # Arrondi à 2 décimales
         })
+
     return jsonify(results=results)
 
 # Route pour afficher un autre graphique ou rapport
@@ -79,16 +77,16 @@ def mongraphique():
 # Route pour afficher un histogramme des températures
 @app.route('/histogramme/')
 def histogramme():
-    response = urlopen('https://samples.openweathermap.org/data/2.5/forecast?lat=0&lon=0&appid=xxx')
-    raw_content = response.read()
-    json_content = json.loads(raw_content.decode('utf-8'))
+    url = 'https://samples.openweathermap.org/data/2.5/forecast?lat=0&lon=0&appid=xxx'
+    response = requests.get(url)
+    json_content = response.json()
+
     results = []
     for list_element in json_content.get('list', []):
         dt_value = datetime.utcfromtimestamp(list_element.get('dt')).strftime('%Y-%m-%d %H:%M:%S')  # Format de la date
         temp_day_value = list_element.get('main', {}).get('temp') - 273.15  # Kelvin à °C
         results.append({'Jour': dt_value, 'temp': round(temp_day_value, 2)})
 
-    # Rendre la page HTML avec les données
     return render_template('histogramme.html', results=results)
 
 # Route pour afficher la page de contact
@@ -96,6 +94,7 @@ def histogramme():
 def contact():
     return render_template("contact.html")
 
-# Démarrer l'application Flask
+# Lancer l'application Flask
 if __name__ == "__main__":
     app.run(debug=True)
+
