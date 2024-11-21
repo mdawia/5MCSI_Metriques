@@ -1,1 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Histogramme des Températures</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Jour', 'Température (°C)'],
+                {% for temp in results %}
+                ['{{ temp["Jour"] }}', {{ temp["temp"] }}],
+                {% endfor %}
+            ]);
+
+            var options = {
+                title: 'Évolution des Températures à Tawarano',
+                hAxis: {title: 'Jour', titleTextStyle: {color: '#333'}},
+                vAxis: {minValue: 0},
+                legend: {position: 'none'}
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <h2>Histogramme des Températures</h2>
+    <div id="chart_div" style="width: 100%; height: 500px;"></div>
+</body>
+</html>
 
