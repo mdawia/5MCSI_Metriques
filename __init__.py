@@ -13,8 +13,9 @@ def hello_world():
 
 
 @app.route("/contact/")
-def MaPremiereAPI():
-    return "<h2>Ma page de contact</h2>"
+def contact():
+    return render_template("contact.html")
+
 
 from flask import Flask, render_template_string, render_template, jsonify
 from flask import json
@@ -67,9 +68,7 @@ def histogramme():
     # Rendre la page HTML avec les données
     return render_template('histogramme.html', results=results)
 
-@app.route("/contact/")
-def contact():
-    return render_template("contact.html")
+
 
 
 
