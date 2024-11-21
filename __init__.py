@@ -1,6 +1,4 @@
-from flask import Flask, render_template_string, render_template, jsonify
-from flask import render_template
-from flask import json
+from flask import Flask, render_template, jsonify
 import requests
 import matplotlib.pyplot as plt
 import io
@@ -9,14 +7,15 @@ from datetime import datetime
 from urllib.request import urlopen
 import sqlite3
 
-                                                                                                                                       
-app = Flask(__name__)                                                                                                                  
-                                                                                                                                       
+# Une seule initialisation de l'application Flask
+app = Flask(__name__)
+
+# Route pour la page d'accueil
 @app.route('/')
 def hello_world():
-    return render_template('hello.html') #Commentaire
+    return render_template('hello.html')  # Vous avez déjà cette route
 
-
+# Route pour afficher les commits
 @app.route('/commits/')
 def commits():
     # Récupérer les commits via l'API GitHub
@@ -56,22 +55,7 @@ def commits():
 
     return render_template('commits.html', img_base64=img_base64)
 
-
-from flask import Flask, render_template_string, render_template, jsonify
-from flask import json
-from datetime import datetime
-from urllib.request import urlopen
-import sqlite3
-
-app = Flask(__name__)
-
-@app.route('/')
-def hello_world():
-    return render_template('hello.html')  # Commentaire
-
-
-
-# Nouvelle route pour /tawarano/
+# Route pour afficher les données météo (exemple)
 @app.route('/tawarano/')
 def meteo():
     response = urlopen('https://samples.openweathermap.org/data/2.5/forecast?lat=0&lon=0&appid=xxx')
@@ -87,13 +71,14 @@ def meteo():
         })
     return jsonify(results=results)
 
+# Route pour afficher un autre graphique ou rapport
 @app.route("/rapport/")
 def mongraphique():
     return render_template("graphique.html")
 
+# Route pour afficher un histogramme des températures
 @app.route('/histogramme/')
 def histogramme():
-    # Récupérer les données de l'API
     response = urlopen('https://samples.openweathermap.org/data/2.5/forecast?lat=0&lon=0&appid=xxx')
     raw_content = response.read()
     json_content = json.loads(raw_content.decode('utf-8'))
@@ -106,13 +91,11 @@ def histogramme():
     # Rendre la page HTML avec les données
     return render_template('histogramme.html', results=results)
 
+# Route pour afficher la page de contact
 @app.route("/contact/")
 def contact():
     return render_template("contact.html")
 
-
-
-
-  
+# Démarrer l'application Flask
 if __name__ == "__main__":
-  app.run(debug=True)
+    app.run(debug=True)
